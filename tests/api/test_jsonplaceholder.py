@@ -1,3 +1,7 @@
+import pytest
+
+
+@pytest.mark.api
 def test_get_posts(http_session, api_base_url):
     """GET /posts should return a list of posts and status 200."""
     resp = http_session.get(f"{api_base_url}/posts")
@@ -7,6 +11,7 @@ def test_get_posts(http_session, api_base_url):
     assert len(data) > 0
 
 
+@pytest.mark.api
 def test_create_post(http_session, api_base_url):
     """POST /posts should accept a new post and return 201/201-like response."""
     payload = {"title": "foo", "body": "bar", "userId": 1}

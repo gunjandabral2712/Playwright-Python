@@ -83,3 +83,35 @@ def page(browser_context):
     p = browser_context.new_page()
     yield p
     p.close()
+
+
+# pytest-html customization: add a 'Category' column (UI / API) to the HTML report
+def pytest_html_results_table_header(cells):
+    try:
+        from py.xml import html
+    except Exception:
+        return
+    cells.insert(1, html.th("Category"))
+
+
+def pytest_html_results_table_row(report, cells):
+    try:
+        from py.xml import html
+    except Exception:
+        return
+    # report.keywords contains markers as keys
+    cat = "Other"
+    try:
+        if hasattr(report, "keywords"):
+            if "ui" in report.keywords:
+                cat = "UI"
+            elif "api" in report.keywords:
+                cat = "API"
+    except Exception:
+        cat = "Other"
+
+    cells.insert(1, html.td(cat))
+
+
+def pytest_html_report_title(report):
+    report.title = "Test Report (UI / API categorized)"

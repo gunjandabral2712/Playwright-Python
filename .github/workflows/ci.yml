@@ -28,6 +28,13 @@ jobs:
         run: |
           python -m playwright install --with-deps
 
-      - name: Run tests
+      - name: Run tests (produce JUnit XML + HTML)
         run: |
-          pytest -q
+          mkdir -p test-results
+          pytest -q --junitxml=test-results/junit-report.xml --html=test-results/report.html --self-contained-html
+
+      - name: Upload test report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-reports
+          path: test-results
