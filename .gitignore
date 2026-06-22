@@ -1,0 +1,20 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Pytest and Python caches
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code: ignore all, but keep shared launch/settings
+.vscode/
+!.vscode/launch.json
+!.vscode/settings.json
