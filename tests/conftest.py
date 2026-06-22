@@ -51,18 +51,8 @@ def playwright_headless(pytestconfig):
     return bool(_CONFIG.get("Playwright", {}).get("Headless", True))
 
 
-def pytest_addoption(parser):
-    """Add CLI option `--headed` to run tests with a visible browser.
-
-    Usage:
-        pytest --headed    # run tests headed (PLAYWRIGHT_HEADLESS=False)
-    """
-    parser.addoption(
-        "--headed",
-        action="store_true",
-        default=False,
-        help="Run Playwright tests with a visible browser (headed).",
-    )
+# NOTE: pytest-playwright plugin already provides a `--headed` CLI option.
+# We intentionally do not re-declare it to avoid argparse conflicts.
 
 
 # Explicit C#-style fixtures: session-scoped Browser, per-test Context and Page
