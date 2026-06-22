@@ -88,7 +88,11 @@ def page(browser_context):
 # pytest-html customization: add a 'Category' column (UI / API) to the HTML report
 def pytest_html_results_table_header(cells):
     try:
-        from py.xml import html
+        import importlib
+        mod = importlib.import_module("py.xml")
+        html = getattr(mod, "html", None)
+        if html is None:
+            return
     except Exception:
         return
     cells.insert(1, html.th("Category"))
@@ -96,7 +100,11 @@ def pytest_html_results_table_header(cells):
 
 def pytest_html_results_table_row(report, cells):
     try:
-        from py.xml import html
+        import importlib
+        mod = importlib.import_module("py.xml")
+        html = getattr(mod, "html", None)
+        if html is None:
+            return
     except Exception:
         return
     # report.keywords contains markers as keys
