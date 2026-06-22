@@ -31,12 +31,38 @@ def base_url():
 
 
 @pytest.fixture(scope="session")
-def playwright_headless():
-    """Whether Playwright should run headless. Can be overridden by env var `PLAYWRIGHT_HEADLESS` (true/false)."""
+def playwright_headless(pytestconfig):
+    """Whether Playwright should run headless.
+
+    Precedence (highest -> lowest):
+    1. Command-line `--headed` flag (if provided, forces headed)
+    2. `PLAYWRIGHT_HEADLESS` environment variable (true/false)
+    3. `Playwright.Headless` in `appsettings.json`
+    4. Default: True
+    """
+    # If CLI flag --headed is provided, run headed (i.e., headless=False)
+    if pytestconfig.getoption("headed"):
+        return False
+
     env = os.getenv("PLAYWRIGHT_HEADLESS")
     if env is not None:
         return env.lower() in ("1", "true", "yes")
+
     return bool(_CONFIG.get("Playwright", {}).get("Headless", True))
+
+
+def pytest_addoption(parser):
+    """Add CLI option `--headed` to run tests with a visible browser.
+
+    Usage:
+        pytest --headed    # run tests headed (PLAYWRIGHT_HEADLESS=False)
+    """
+    parser.addoption(
+        "--headed",
+        action="store_true",
+        default=False,
+        help="Run Playwright tests with a visible browser (headed).",
+    )
 
 
 # Explicit C#-style fixtures: session-scoped Browser, per-test Context and Page
